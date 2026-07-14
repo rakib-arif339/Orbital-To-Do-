@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radial Orbital To-Do Timeline</title>
+    <!-- Tailwind CSS CDN for core spacing and layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for beautiful node symbols -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Base Cyberpunk/Dark Minimal Theme */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 3D Perspective Orbit Base */
+        .orbit-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        /* Core Glowing Pulsing Center Node */
+        .center-orb {
+            background: linear-gradient(135deg, #a855f7, #3b82f6, #14b8a6);
+        }
+
+        /* Custom animation for node connections pulsing */
+        @keyframes custom-pulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        .pulse-active {
+            animation: custom-pulse 2s infinite ease-in-out;
+        }
+
+        /* Hide Scrollbars completely */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="w-full h-screen flex flex-col items-center justify-center bg-black select-none">
+
+    <!-- Primary Interaction Viewport Wrapper -->
+    <div id="container" class="w-full h-screen flex flex-col items-center justify-center bg-black overflow-hidden relative">
+        <div class="relative w-full max-w-5xl h-full flex items-center justify-center">
+            
+            <!-- The Rotational Orbit Rig -->
+            <div id="orbitRig" class="absolute w-full h-full flex items-center justify-center orbit-container transition-transform duration-500 ease-out">
+                
+                <!-- Central Cosmic Dynamic Hub Element (Add Button - Optimized for 0ms speed) -->
+                <div id="centerAddBtn" class="absolute w-16 h-16 rounded-full center-orb flex items-center justify-center z-50 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-75 shadow-lg shadow-purple-500/40">
+                    <div class="absolute w-20 h-20 rounded-full border border-white/20 animate-ping opacity-70 pointer-events-none"></div>
+                    <div class="absolute w-24 h-24 rounded-full border border-white/10 animate-ping opacity-50 pointer-events-none" style="animation-delay: 0.5s;"></div>
+                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg shadow-white/20 backdrop-blur-md text-black font-bold pointer-events-none">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    </div>
+                </div>
+
+                <!-- Concentric Orbital Rings based on Energy Tiers -->
+                <!-- Orbit 4: 80-100% Energy (Giant Ring) -->
+                <div class="absolute w-[560px] h-[560px] rounded-full border border-white/15 pointer-events-none border-dashed animate-[spin_120s_linear_infinite]"></div>
+                <!-- Orbit 3: 60-79% Energy (Mid-High Ring) -->
+                <div class="absolute w-[420px] h-[420px] rounded-full border border-white/10 pointer-events-none"></div>
+                <!-- Orbit 2: 40-59% Energy (Mid-Low Ring) -->
+                <div class="absolute w-[300px] h-[300px] rounded-full border border-white/10 pointer-events-none border-dashed animate-[spin_80s_linear_reverse_infinite]"></div>
+                <!-- Orbit 1: 0-39% Energy (Inner Core Ring) -->
+                <div class="absolute w-[190px] h-[190px] rounded-full border border-white/10 pointer-events-none"></div>
+
+                <!-- Target Area Injection Node Segment Container -->
+                <div id="nodes-container" class="absolute w-full h-full flex items-center justify-center"></div>
+
+            </div>
+
+        </div>
+
+        <!-- Add Work Modal Overlay (Zero-latency instant rendering without fade delay) -->
+        <div id="addModal" class="hidden absolute inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[999]" onclick="closeModal()">
+            <div class="w-96 bg-black border border-white/20 p-6 rounded-2xl shadow-2xl shadow-white/10 relative max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-white/10">
+                    <h3 class="text-sm uppercase tracking-wider font-bold text-white flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-4 h-4 text-purple-400"></i> Orbit New Task
+                    </h3>
+                    <button type="button" onclick="closeModal()" class="text-white/50 hover:text-white transition-colors">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Title</label>
+                        <input id="taskTitle" type="text" placeholder="Project milestone name" class="w-full bg-white/5 border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Date</label>
+                            <input id="taskDate" type="text" placeholder="e.g. Jul 2026" class="w-full bg-white/5 border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Energy Level (%)</label>
+                            <input id="taskEnergy" type="number" min="0" max="100" value="95" class="w-full bg-white/5 border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40 font-mono font-bold text-purple-300">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Content</label>
+                        <textarea id="taskContent" placeholder="Brief description of the objective..." rows="2" class="w-full bg-white/5 border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40 resize-none"></textarea>
+                    </div>
+
+                    <!-- NEW: Connected Orbit Dynamic Selector -->
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Connected Orbit</label>
+                        <select id="taskConnected" class="w-full bg-[#111] border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40 font-mono">
+                            <option value="" class="bg-black text-white/50">-- Independent Orbit (None) --</option>
+                        </select>
+                    </div>
+
+                    <!-- Icon Chooser Dynamic Selector -->
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Choose Node Icon</label>
+                        <div class="grid grid-cols-5 gap-2 bg-white/5 p-2 rounded border border-white/10">
+                            <!-- Row 1 (Originals) -->
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all" data-icon="calendar" onclick="selectIcon(this)">
+                                <i data-lucide="calendar" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="file-text" onclick="selectIcon(this)">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="code" onclick="selectIcon(this)">
+                                <i data-lucide="code" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="user" onclick="selectIcon(this)">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="clock" onclick="selectIcon(this)">
+                                <i data-lucide="clock" class="w-4 h-4"></i>
+                            </button>
+
+                            <!-- Row 2 (New Icons) -->
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="zap" onclick="selectIcon(this)">
+                                <i data-lucide="zap" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="target" onclick="selectIcon(this)">
+                                <i data-lucide="target" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="briefcase" onclick="selectIcon(this)">
+                                <i data-lucide="briefcase" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="database" onclick="selectIcon(this)">
+                                <i data-lucide="database" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="cpu" onclick="selectIcon(this)">
+                                <i data-lucide="cpu" class="w-4 h-4"></i>
+                            </button>
+
+                            <!-- Row 3 (New Icons) -->
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="flag" onclick="selectIcon(this)">
+                                <i data-lucide="flag" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="star" onclick="selectIcon(this)">
+                                <i data-lucide="star" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="bookmark" onclick="selectIcon(this)">
+                                <i data-lucide="bookmark" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="git-branch" onclick="selectIcon(this)">
+                                <i data-lucide="git-branch" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" class="icon-option p-2 rounded flex items-center justify-center border border-transparent hover:bg-white/10 text-white/60 hover:text-white transition-all" data-icon="rocket" onclick="selectIcon(this)">
+                                <i data-lucide="rocket" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 pt-3 border-t border-white/10 flex justify-end">
+                    <button type="button" onclick="saveNewTask()" class="px-4 py-2 text-xs bg-white text-black font-extrabold tracking-wider rounded border border-white hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-all">
+                        LAUNCH INTO ORBIT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- System Data Engine Setup (Updated with varied energies to demonstrate 4 concentric orbits) ---
+        const timelineData = [
+            {
+                id: 1,
+                title: "Planning",
+                date: "Jan 2026",
+                content: "Project planning and requirements gathering phase.",
+                category: "Planning",
+                icon: "calendar",
+                relatedIds: [2],
+                status: "completed",
+                energy: 100 // Outer Giant Orbit (Ring 4)
+            },
+            {
+                id: 2,
+                title: "Design",
+                date: "Feb 2026",
+                content: "UI/UX design and system architecture.",
+                category: "Design",
+                icon: "file-text",
+                relatedIds: [1, 3],
+                status: "active",
+                energy: 85 // Outer Giant Orbit (Ring 4)
+            },
+            {
+                id: 3,
+                title: "Development",
+                date: "Mar 2026",
+                content: "Core features implementation and testing.",
+                category: "Development",
+                icon: "code",
+                relatedIds: [2, 4],
+                status: "active",
+                energy: 70 // Mid-High Orbit (Ring 3)
+            },
+            {
+                id: 4,
+                title: "Testing",
+                date: "Apr 2026",
+                content: "User testing and bug fixes.",
+                category: "Testing",
+                icon: "user",
+                relatedIds: [3, 5],
+                status: "paused",
+                energy: 50 // Mid-Low Orbit (Ring 2)
+            },
+            {
+                id: 5,
+                title: "Release",
+                date: "May 2026",
+                content: "Final deployment and release.",
+                category: "Release",
+                icon: "clock",
+                relatedIds: [4],
+                status: "canceled",
+                energy: 25 // Inner Core Orbit (Ring 1)
+            }
+        ];
+
+        // --- Application Architecture State Properties ---
+        let activeNodeId = null;
+        let autoRotate = true;
+        let rotationAngle = 0;
+        let selectedIconName = "calendar";
+
+        // --- NEW: Calculate Orbit Radius Dynamically based on Energy Level ---
+        function getOrbitRadius(energy) {
+            if (energy >= 80) return 280; // Ring 4: Giant Orbit (560px diameter)
+            if (energy >= 60) return 210; // Ring 3: Mid-High Orbit (420px diameter)
+            if (energy >= 40) return 150; // Ring 2: Mid-Low Orbit (300px diameter)
+            return 95;                    // Ring 1: Inner Core Orbit (190px diameter)
+        }
+
+        // Elements
+        const container = document.getElementById('container');
+        const orbitRig = document.getElementById('orbitRig');
+        const nodesContainer = document.getElementById('nodes-container');
+        const centerAddBtn = document.getElementById('centerAddBtn');
+        const addModal = document.getElementById('addModal');
+
+        // --- Render Engine Pipeline Functions ---
+        function renderTimeline() {
+            nodesContainer.innerHTML = '';
+            
+            const totalNodes = timelineData.length;
+            if (totalNodes === 0) {
+                nodesContainer.innerHTML = '<div class="text-white/40 font-mono text-xs uppercase tracking-widest z-10 pointer-events-none">No orbital tasks remaining. Click center + to launch new task.</div>';
+                return;
+            }
+
+            timelineData.forEach((item, index) => {
+                // Node Position Math Engine Processing 
+                const angle = ((index / totalNodes) * 360 + rotationAngle) % 360;
+                const radian = (angle * Math.PI) / 180;
+
+                // Dynamically assign radius based on item energy!
+                const radius = getOrbitRadius(item.energy);
+                const x = radius * Math.cos(radian);
+                const y = radius * Math.sin(radian);
+
+                // Math-Driven Spatial Z-indexing & Opacity Falloff Depth Simulation
+                const zIndex = Math.round(100 + 50 * Math.cos(radian));
+                const opacity = Math.max(0.4, Math.min(1, 0.4 + 0.6 * ((1 + Math.sin(radian)) / 2)));
+
+                const isExpanded = activeNodeId === item.id;
+                const isRelated = activeNodeId && item.relatedIds.includes(activeNodeId);
+
+                // Create Item Element Container
+                const nodeWrapper = document.createElement('div');
+                nodeWrapper.className = `absolute cursor-pointer select-none flex flex-col items-center`;
+                nodeWrapper.style.transform = `translate(${x}px, ${y}px)`;
+                nodeWrapper.style.zIndex = isExpanded ? 200 : zIndex;
+                nodeWrapper.style.opacity = isExpanded ? 1 : opacity;
+                nodeWrapper.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+
+                // Status Dynamic Styling Logic
+                let statusClasses = "bg-white text-black border-white shadow-lg shadow-white/30";
+                let statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-white text-black border-white">COMPLETED</span>`;
+
+                if (item.status === 'active') {
+                    statusClasses = "bg-blue-600 text-white border-blue-300 shadow-lg shadow-blue-500/50 animate-pulse";
+                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-blue-500/20 text-blue-300 border-blue-400">⚡ ACTIVE WORK</span>`;
+                } else if (item.status === 'paused') {
+                    statusClasses = "bg-amber-500/30 text-amber-300 border-amber-400 shadow-lg shadow-amber-500/20";
+                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-amber-500/20 text-amber-300 border-amber-400">⏸ PAUSED</span>`;
+                } else if (item.status === 'canceled') {
+                    statusClasses = "bg-red-950/60 text-red-400 border-red-500/50 opacity-60";
+                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-red-500/20 text-red-400 border-red-500">✖ CANCELED</span>`;
+                }
+                
+                if (isExpanded) {
+                    statusClasses += " scale-150 ring-4 ring-white/40";
+                } else if (isRelated) {
+                    statusClasses = "bg-white/80 text-black border-white animate-pulse shadow-lg shadow-white/30";
+                }
+
+                // Node Structure Template String Injection Blueprint
+                nodeWrapper.innerHTML = `
+                    <!-- Energy Aura Radial Pulse Indicator Layer -->
+                    <div class="absolute rounded-full -inset-1 ${isRelated ? 'pulse-active' : ''}" 
+                         style="background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%); 
+                                width: ${item.energy * 0.5 + 40}px; height: ${item.energy * 0.5 + 40}px; 
+                                transform: translate(calc(-50% + 20px), calc(-50% + 20px)); pointer-events:none;">
+                    </div>
+
+                    <!-- Main Interactive Icon Token Button -->
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${statusClasses}">
+                        <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+                    </div>
+
+                    <!-- Primary Absolute Subtitle Node Label -->
+                    <div class="absolute top-12 whitespace-nowrap text-xs font-semibold tracking-wider transition-all duration-300 ${isExpanded ? 'text-white scale-125 font-bold' : item.status === 'canceled' ? 'text-red-400/60 line-through' : 'text-white/80'}">
+                        ${item.title}
+                    </div>
+
+                    <!-- Expanded Card Layout Portal View overlay panel -->
+                    ${isExpanded ? `
+                    <div class="absolute top-20 w-72 bg-black/95 backdrop-blur-xl border border-white/40 shadow-2xl shadow-white/10 p-4 rounded-xl z-[300]" onclick="event.stopPropagation()">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 bg-white/60"></div>
+                        
+                        <div class="flex justify-between items-center mb-2">
+                            ${statusBadge}
+                            <span class="text-xs font-mono text-white/50">${item.date}</span>
+                        </div>
+                        
+                        <!-- Header with Title and Delete Action Option -->
+                        <div class="flex justify-between items-start my-2 pb-2 border-b border-white/10">
+                            <h3 class="text-sm font-bold text-white">${item.title}</h3>
+                            <button type="button" onclick="deleteTask(${item.id}, event)" class="flex items-center gap-1 text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-all font-bold tracking-wider" title="Delete Task">
+                                <i data-lucide="trash-2" class="w-3 h-3"></i> DELETE
+                            </button>
+                        </div>
+
+                        <p class="text-xs text-white/80 leading-relaxed">${item.content}</p>
+
+                        <!-- Energy Tracking Module Visualizer -->
+                        <div class="mt-3 pt-2 border-t border-white/10">
+                            <div class="flex justify-between items-center text-[11px] mb-1 text-white/70">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="zap" class="w-3 h-3 text-purple-400"></i> Orbit Ring Level
+                                </span>
+                                <span class="font-mono font-bold text-white">${item.energy}%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-teal-400" style="width: ${item.energy}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Work Status Switcher Option -->
+                        <div class="mt-3 pt-2 border-t border-white/10">
+                            <span class="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Set Work Status:</span>
+                            <div class="grid grid-cols-3 gap-1">
+                                <button type="button" onclick="changeStatus(${item.id}, 'active', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'active' ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-500/30' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                                    ⚡ ACTIVE
+                                </button>
+                                <button type="button" onclick="changeStatus(${item.id}, 'paused', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'paused' ? 'bg-amber-500 text-black border-amber-300 font-extrabold' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                                    ⏸ PAUSE
+                                </button>
+                                <button type="button" onclick="changeStatus(${item.id}, 'canceled', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'canceled' ? 'bg-red-600 text-white border-red-400' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                                    ✖ CANCEL
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Dedicated Task Complete Button -->
+                        <div class="mt-2 pt-2 border-t border-white/10">
+                            <button type="button" onclick="markComplete(${item.id}, event)" class="w-full py-2 px-3 bg-gradient-to-r from-teal-400 to-emerald-500 text-black font-extrabold text-xs tracking-wider rounded shadow-lg shadow-teal-500/20 hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> TASK COMPLETE
+                            </button>
+                        </div>
+
+                        <!-- Interconnected Nodes Hyperlink Cluster Engine -->
+                        ${item.relatedIds.length > 0 ? `
+                        <div class="mt-3 pt-2 border-t border-white/10">
+                            <div class="flex items-center mb-1 gap-1 text-[10px] uppercase tracking-wider font-medium text-white/50">
+                                <i data-lucide="link" class="w-2.5 h-2.5"></i> Connected Nodes
+                            </div>
+                            <div class="flex flex-wrap gap-1">
+                                ${item.relatedIds.map(relId => {
+                                    const relItem = timelineData.find(i => i.id === relId);
+                                    if (!relItem) return '';
+                                    return `
+                                        <button type="button" class="flex items-center gap-1 h-6 px-2 text-[11px] border border-white/20 bg-transparent hover:bg-white/10 text-white/80 hover:text-white transition-all rounded-none" onclick="jumpToNode(${relId})">
+                                            ${relItem.title}
+                                            <i data-lucide="arrow-right" class="w-2.5 h-2.5 opacity-60"></i>
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                `;
+
+                // Handle Component Click Activation Sequences (Instant response)
+                nodeWrapper.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleItem(item.id, index);
+                });
+
+                nodesContainer.appendChild(nodeWrapper);
+            });
+
+            // Initialize Icons inside container UI template
+            lucide.createIcons();
+        }
+
+        // --- System Logic Event Handling Modules ---
+        function toggleItem(id, index) {
+            if (activeNodeId === id) {
+                activeNodeId = null;
+                autoRotate = true;
+            } else {
+                activeNodeId = id;
+                autoRotate = false;
+                const totalNodes = timelineData.length;
+                const targetAngle = (index / totalNodes) * 360;
+                rotationAngle = (270 - targetAngle) % 360;
+            }
+            renderTimeline();
+        }
+
+        function jumpToNode(id) {
+            const index = timelineData.findIndex(item => item.id === id);
+            if (index !== -1) {
+                toggleItem(id, index);
+            }
+        }
+
+        // --- NEW: Change Work Status (Active, Pause, Cancel) ---
+        function changeStatus(id, newStatus, event) {
+            if (event) event.stopPropagation();
+            const item = timelineData.find(i => i.id === id);
+            if (item) {
+                item.status = newStatus;
+                renderTimeline();
+            }
+        }
+
+        // --- NEW: Mark Task Complete Button Handler ---
+        function markComplete(id, event) {
+            if (event) event.stopPropagation();
+            const item = timelineData.find(i => i.id === id);
+            if (item) {
+                item.status = 'completed';
+                renderTimeline();
+            }
+        }
+
+        // --- Delete Task Function ---
+        function deleteTask(id, event) {
+            if (event) event.stopPropagation();
+            const index = timelineData.findIndex(item => item.id === id);
+            if (index !== -1) {
+                timelineData.splice(index, 1);
+            }
+            timelineData.forEach(item => {
+                item.relatedIds = item.relatedIds.filter(relId => relId !== id);
+            });
+            if (activeNodeId === id) {
+                activeNodeId = null;
+                autoRotate = true;
+            }
+            renderTimeline();
+        }
+
+        // Modal Action Handlers (Zero delay execution)
+        function openModal() {
+            autoRotate = false;
+            addModal.classList.remove('hidden');
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDate').value = '';
+            document.getElementById('taskContent').value = '';
+            document.getElementById('taskEnergy').value = '90';
+            
+            // NEW: Dynamically populate Connected Orbit dropdown selector
+            const connectedSelect = document.getElementById('taskConnected');
+            connectedSelect.innerHTML = '<option value="" class="bg-black text-white/50">-- Independent Orbit (None) --</option>';
+            timelineData.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.className = "bg-black text-white font-sans";
+                option.textContent = `[Ring Level ${item.energy}%] ${item.title}`;
+                connectedSelect.appendChild(option);
+            });
+            // Automatically pre-select the most recent task as default
+            if (timelineData.length > 0) {
+                connectedSelect.value = timelineData[timelineData.length - 1].id;
+            }
+
+            setTimeout(() => document.getElementById('taskTitle').focus(), 10);
+        }
+
+        function closeModal() {
+            addModal.classList.add('hidden');
+            if (!activeNodeId) {
+                autoRotate = true;
+            }
+        }
+
+        function selectIcon(buttonElement) {
+            document.querySelectorAll('.icon-option').forEach(btn => {
+                btn.classList.remove('border-white/20', 'bg-white/10', 'text-white');
+                btn.classList.add('border-transparent', 'text-white/60');
+            });
+            buttonElement.classList.remove('border-transparent', 'text-white/60');
+            buttonElement.classList.add('border-white/20', 'bg-white/10', 'text-white');
+            selectedIconName = buttonElement.getAttribute('data-icon');
+        }
+
+        function saveNewTask() {
+            const title = document.getElementById('taskTitle').value.trim() || "Untitled Work";
+            const date = document.getElementById('taskDate').value.trim() || "Present";
+            const content = document.getElementById('taskContent').value.trim() || "No detailed parameters listed.";
+            const energy = parseInt(document.getElementById('taskEnergy').value) || 90;
+            const connectedIdVal = document.getElementById('taskConnected').value;
+
+            const newId = timelineData.length > 0 ? Math.max(...timelineData.map(i => i.id)) + 1 : 1;
+
+            // NEW: Link nodes based on the dropdown selection
+            const relatedIds = [];
+            if (connectedIdVal !== "") {
+                const targetId = parseInt(connectedIdVal);
+                const targetItem = timelineData.find(i => i.id === targetId);
+                if (targetItem) {
+                    targetItem.relatedIds.push(newId);
+                    relatedIds.push(targetItem.id);
+                }
+            }
+
+            timelineData.push({
+                id: newId,
+                title: title,
+                date: date,
+                content: content,
+                category: "Custom",
+                icon: selectedIconName,
+                relatedIds: relatedIds,
+                status: "active", // Default new tasks to active
+                energy: Math.min(100, Math.max(0, energy))
+            });
+
+            closeModal();
+            renderTimeline();
+        }
+
+        // --- INSTANT CLICK FIX --- 
+        // Immediately trigger modal and stop event bubbles from causing layout delay
+        centerAddBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            openModal();
+        });
+
+        // Global Reset Capture Trigger Interceptor
+        container.addEventListener('click', (e) => {
+            if (e.target === container || e.target === orbitRig) {
+                activeNodeId = null;
+                autoRotate = true;
+                renderTimeline();
+            }
+        });
+
+        // --- Mouse Wheel Scroll Dynamic Rotation Interceptor Engine ---
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            autoRotate = false;
+            const scrollSensitivity = 0.05;
+            rotationAngle = (rotationAngle + e.deltaY * scrollSensitivity) % 360;
+            if (rotationAngle < 0) rotationAngle += 360;
+            renderTimeline();
+        }, { passive: false });
+
+        // --- Core Orbital Tick Rotation Engine ---
+        setInterval(() => {
+            if (autoRotate) {
+                rotationAngle = (rotationAngle + 0.3) % 360;
+                renderTimeline();
+            }
+        }, 50);
+
+        // Initial App Mount Load Render Trigger
+        renderTimeline();
+    </script>
+</body>
+</html>
