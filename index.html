@@ -43,35 +43,365 @@
         ::-webkit-scrollbar {
             display: none;
         }
+
+        /* ==========================================================================
+           CUSTOM ROTARY SWITCH RIG (Scaled UP for prominent visibility)
+           ========================================================================== */
+        .rotary-rig-wrapper {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 40;
+            transform: scale(0.95); /* UPGRADED: Increased from 0.65 to 0.95 */
+            transform-origin: bottom right;
+        }
+
+        .de {
+            user-select: none;
+            position: relative;
+            width: 230px;
+            height: 230px;
+            border-radius: 100%;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+            background-color: transparent;
+        }
+
+        .de .den, .de .dene, .de .denem, .de .deneme, .de .light, .de .dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        .den {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: -110px 0 0 -110px;
+            border-radius: 100%;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, .8), 0 2px 20px rgba(168, 85, 247, 0.4);
+            background: #1e1b4b;
+            background: -webkit-radial-gradient(center, ellipse cover, #1e1b4b 0%, #09090b 100%);
+            background: radial-gradient(ellipse at center, #1e1b4b 0%, #09090b 100%);
+        }
+
+        .dene {
+            z-index: 4;
+            width: 140px;
+            height: 140px;
+            margin: -70px 0 0 -70px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 2px rgba(255, 255, 255, .2), 0 3px 13px rgba(0, 0, 0, .85);
+            background: #18181b;
+            background: linear-gradient(to bottom, #27272a 0%, #09090b 100%);
+        }
+
+        .denem {
+            width: 120px;
+            height: 120px;
+            margin: -60px 0 0 -60px;
+            border-radius: 100%;
+            background: #09090b;
+            background: linear-gradient(to bottom, #09090b 0%, #27272a 100%);
+        }
+
+        .deneme {
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+            border-radius: 100%;
+            box-shadow: inset 0 2px 3px rgba(255, 255, 255, .3), 0 8px 20px rgba(0, 0, 0, .9);
+            background: #27272a;
+            background: linear-gradient(to bottom, #3f3f46 0%, #18181b 100%);
+        }
+
+        .den .switch {
+            z-index: 3;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .den .switch label {
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 70px;
+            margin-top: -35px;
+            transform-origin: 0% 50%;
+            cursor: pointer;
+        }
+
+        .den .switch label:after {
+            content: "";
+            position: absolute;
+            top: 6px;
+            left: 1px;
+            width: 100%;
+            height: 30px;
+            transform: rotate(-26deg);
+        }
+
+        .den .switch label:before {
+            content: "";
+            position: absolute;
+            bottom: 6px;
+            left: 1px;
+            width: 100%;
+            height: 30px;
+            transform: rotate(26deg);
+        }
+
+        .den .switch label span {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 100%;
+            font-weight: bold;
+            font-size: 13px;
+            font-family: monospace;
+            line-height: 70px;
+            text-align: center;
+            color: #a1a1aa;
+            text-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+            transition: color 0.3s;
+        }
+
+        .den .switch label:hover span {
+            color: #ffffff;
+        }
+
+        /* 7 specific angles for OFF, 1, 2, 3, 4, 5, SCROLL */
+        .den .switch label:nth-child(1) { transform: rotate(-90deg); }
+        .den .switch label:nth-child(1) span { right: 2px; font-size: 12px; transform: rotate(90deg); }
+
+        .den .switch label:nth-child(2) { transform: rotate(-38deg); }
+        .den .switch label:nth-child(2) span { transform: rotate(38deg); }
+
+        .den .switch label:nth-child(3) { transform: rotate(13deg); }
+        .den .switch label:nth-child(3) span { transform: rotate(-13deg); }
+
+        .den .switch label:nth-child(4) { transform: rotate(64deg); }
+        .den .switch label:nth-child(4) span { transform: rotate(-64deg); }
+
+        .den .switch label:nth-child(5) { transform: rotate(115deg); }
+        .den .switch label:nth-child(5) span { transform: rotate(-115deg); }
+
+        .den .switch label:nth-child(6) { transform: rotate(166deg); }
+        .den .switch label:nth-child(6) span { transform: rotate(-166deg); }
+
+        .den .switch label:nth-child(7) { transform: rotate(217deg); }
+        .den .switch label:nth-child(7) span { font-size: 10px; right: -5px; transform: rotate(-217deg); color: #38bdf8; }
+
+        .den .switch input {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* SWITCH LIGHT */
+        .den .light {
+            z-index: 1;
+            width: 50%;
+            height: 100px;
+            margin-top: -50px;
+            transform-origin: 0% 50%;
+            transform: rotate(-90deg);
+            transition: all .5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .den .light span {
+            opacity: .6;
+            position: absolute;
+            top: 0;
+            left: 15px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.8) 0%, rgba(56, 189, 248, 0.4) 42%, rgba(0,0,0,0) 72%);
+        }
+
+        /* SWITCH LIGHT POSITION */
+        .den #switch_off:checked ~ .light { transform: rotate(-90deg); }
+        .den #switch_1:checked ~ .light { transform: rotate(-38deg); }
+        .den #switch_2:checked ~ .light { transform: rotate(13deg); }
+        .den #switch_3:checked ~ .light { transform: rotate(64deg); }
+        .den #switch_4:checked ~ .light { transform: rotate(115deg); }
+        .den #switch_5:checked ~ .light { transform: rotate(166deg); }
+        .den #switch_scroll:checked ~ .light { transform: rotate(217deg); }
+
+        /* SWITCH DOT */
+        .den .dot {
+            z-index: 6;
+            width: 50%;
+            height: 12px;
+            margin-top: -6px;
+            transform-origin: 0% 50%;
+            transition: all .5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .den .dot span {
+            position: absolute;
+            top: 0;
+            left: 30px;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
+        }
+
+        /* SWITCH DOT POSITION */
+        .den #switch_off:checked ~ .dot { transform: rotate(-90deg); }
+        .den #switch_off:checked ~ .dot span { transform: rotate(90deg); background: #71717a; box-shadow: none; }
+
+        .den #switch_1:checked ~ .dot { transform: rotate(-38deg); }
+        .den #switch_1:checked ~ .dot span { opacity: .9; transform: rotate(38deg); }
+
+        .den #switch_2:checked ~ .dot { transform: rotate(13deg); }
+        .den #switch_2:checked ~ .dot span { opacity: 1; transform: rotate(-13deg); }
+
+        .den #switch_3:checked ~ .dot { transform: rotate(64deg); }
+        .den #switch_3:checked ~ .dot span { opacity: 1; transform: rotate(-64deg); }
+
+        .den #switch_4:checked ~ .dot { transform: rotate(115deg); }
+        .den #switch_4:checked ~ .dot span { opacity: 1; transform: rotate(-115deg); }
+
+        .den #switch_5:checked ~ .dot { transform: rotate(166deg); }
+        .den #switch_5:checked ~ .dot span { opacity: 1; transform: rotate(-166deg); background: #a855f7; box-shadow: 0 0 10px #a855f7; }
+
+        .den #switch_scroll:checked ~ .dot { transform: rotate(217deg); }
+        .den #switch_scroll:checked ~ .dot span { opacity: 1; transform: rotate(-217deg); background: #2dd4bf; box-shadow: 0 0 10px #2dd4bf; }
+
+        /* LINE */
+        .den hr.line {
+            z-index: 1;
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 0;
+            margin-top: -1px;
+            border-width: 1px 0;
+            border-style: solid;
+            border-top-color: #27272a;
+            border-bottom-color: #3f3f46;
+        }
+        .den hr.line:nth-child(1) { transform: rotate(-60deg); }
+        .den hr.line:nth-child(2) { transform: rotate(60deg); }
     </style>
 </head>
 <body class="w-full h-screen flex flex-col items-center justify-center bg-black select-none">
 
     <!-- Primary Interaction Viewport Wrapper -->
     <div id="container" class="w-full h-screen flex flex-col items-center justify-center bg-black overflow-hidden relative">
-        <div class="relative w-full max-w-5xl h-full flex items-center justify-center">
+        
+        <!-- Orbital Telemetry Summary Panel (UPGRADED: Larger text and bolder layout) -->
+        <div id="orbitSummary" class="absolute top-8 left-8 z-40 bg-black/70 backdrop-blur-md border border-white/15 p-5 rounded-2xl shadow-2xl shadow-purple-950/30 pointer-events-none select-none transition-all duration-300">
+            <div class="text-xs uppercase tracking-widest text-white/60 mb-3 flex items-center justify-between font-extrabold border-b border-white/15 pb-2 gap-6">
+                <span class="flex items-center gap-2">
+                    <i data-lucide="activity" class="w-4 h-4 text-purple-400 animate-pulse"></i> Orbital Telemetry
+                </span>
+                <span id="displayUserId" class="text-[10px] font-mono bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30 font-bold">GUEST</span>
+            </div>
+            <div class="grid grid-cols-2 gap-x-8 gap-y-2.5 text-sm font-mono">
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-white/80 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-500 animate-ping"></span>Active:
+                    </span>
+                    <span id="countActive" class="font-extrabold text-blue-400 text-base">0</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-white/80 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-amber-500"></span>Paused:
+                    </span>
+                    <span id="countPaused" class="font-extrabold text-amber-300 text-base">0</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-white/80 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>Done:
+                    </span>
+                    <span id="countCompleted" class="font-extrabold text-emerald-400 text-base">0</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-white/80 flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span>Canceled:
+                    </span>
+                    <span id="countCanceled" class="font-extrabold text-red-400 text-base">0</span>
+                </div>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-white/15 flex justify-between items-center text-xs font-mono font-bold">
+                <span class="text-white/60 uppercase tracking-wider">Total Orbit Nodes:</span>
+                <span id="countTotal" class="text-purple-300 font-extrabold text-base">0</span>
+            </div>
+        </div>
+
+        <!-- Rotary Speed & Rotation Control Dial Rig (Bottom-Right Corner) -->
+        <div class="rotary-rig-wrapper">
+            <div class="de">
+                <div class="den">
+                    <hr class="line">
+                    <hr class="line">
+                    <hr class="line">
+                    <div class="switch">
+                        <label for="switch_off" onclick="setRotationSpeed(0, 'off')"><span>OFF</span></label>
+                        <label for="switch_1" onclick="setRotationSpeed(0.15, 'auto')"><span>1</span></label>
+                        <label for="switch_2" onclick="setRotationSpeed(0.3, 'auto')"><span>2</span></label>
+                        <label for="switch_3" onclick="setRotationSpeed(0.6, 'auto')"><span>3</span></label>
+                        <label for="switch_4" onclick="setRotationSpeed(1.0, 'auto')"><span>4</span></label>
+                        <label for="switch_5" onclick="setRotationSpeed(1.5, 'auto')"><span>5</span></label>
+                        <label for="switch_scroll" onclick="setRotationSpeed(0, 'scroll')"><span>SCROLL</span></label>
+
+                        <input type="radio" name="switch" id="switch_off">
+                        <input type="radio" name="switch" id="switch_1">
+                        <input type="radio" checked="" name="switch" id="switch_2">
+                        <input type="radio" name="switch" id="switch_3">
+                        <input type="radio" name="switch" id="switch_4">
+                        <input type="radio" name="switch" id="switch_5">
+                        <input type="radio" name="switch" id="switch_scroll">
+
+                        <div class="light"><span></span></div>
+                        <div class="dot"><span></span></div>
+                        <div class="dene">
+                            <div class="denem">
+                                <div class="deneme"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- UPGRADED: Larger font size for the switch label below -->
+            <div class="text-xs font-mono uppercase tracking-widest text-center mt-[-15px] text-white/70 bg-black/80 px-3 py-1 rounded-lg border border-white/20 shadow-lg font-bold">
+                Rotation Rig: <span id="rotaryStatusText" class="text-purple-400 font-extrabold">SPEED 2</span>
+            </div>
+        </div>
+
+        <div class="relative w-full max-w-7xl h-full flex items-center justify-center">
             
             <!-- The Rotational Orbit Rig -->
             <div id="orbitRig" class="absolute w-full h-full flex items-center justify-center orbit-container transition-transform duration-500 ease-out">
                 
-                <!-- Central Cosmic Dynamic Hub Element (Add Button - Optimized for 0ms speed) -->
-                <div id="centerAddBtn" class="absolute w-16 h-16 rounded-full center-orb flex items-center justify-center z-50 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-75 shadow-lg shadow-purple-500/40">
-                    <div class="absolute w-20 h-20 rounded-full border border-white/20 animate-ping opacity-70 pointer-events-none"></div>
-                    <div class="absolute w-24 h-24 rounded-full border border-white/10 animate-ping opacity-50 pointer-events-none" style="animation-delay: 0.5s;"></div>
-                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-lg shadow-white/20 backdrop-blur-md text-black font-bold pointer-events-none">
-                        <i data-lucide="plus" class="w-5 h-5"></i>
+                <!-- UPGRADED: Central Cosmic Hub Element (Scaled UP from 64px to 80px) -->
+                <div id="centerAddBtn" class="absolute w-20 h-20 rounded-full center-orb flex items-center justify-center z-50 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-75 shadow-xl shadow-purple-500/50">
+                    <div class="absolute w-24 h-24 rounded-full border border-white/30 animate-ping opacity-70 pointer-events-none"></div>
+                    <div class="absolute w-28 h-28 rounded-full border border-white/15 animate-ping opacity-50 pointer-events-none" style="animation-delay: 0.5s;"></div>
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg shadow-white/30 backdrop-blur-md text-black font-extrabold pointer-events-none">
+                        <i data-lucide="plus" class="w-6 h-6"></i>
                     </div>
                 </div>
 
-                <!-- Concentric Orbital Rings based on Energy Tiers -->
-                <!-- Orbit 4: 80-100% Energy (Giant Ring) -->
-                <div class="absolute w-[560px] h-[560px] rounded-full border border-white/15 pointer-events-none border-dashed animate-[spin_120s_linear_infinite]"></div>
-                <!-- Orbit 3: 60-79% Energy (Mid-High Ring) -->
-                <div class="absolute w-[420px] h-[420px] rounded-full border border-white/10 pointer-events-none"></div>
-                <!-- Orbit 2: 40-59% Energy (Mid-Low Ring) -->
-                <div class="absolute w-[300px] h-[300px] rounded-full border border-white/10 pointer-events-none border-dashed animate-[spin_80s_linear_reverse_infinite]"></div>
-                <!-- Orbit 1: 0-39% Energy (Inner Core Ring) -->
-                <div class="absolute w-[190px] h-[190px] rounded-full border border-white/10 pointer-events-none"></div>
+                <!-- UPGRADED: Concentric Orbital Rings (~35% Larger across the board!) -->
+                <!-- Orbit 4: 80-100% Energy (Giant Ring: 760px) -->
+                <div class="absolute w-[760px] h-[760px] rounded-full border border-white/20 pointer-events-none border-dashed animate-[spin_120s_linear_infinite]"></div>
+                <!-- Orbit 3: 60-79% Energy (Mid-High Ring: 580px) -->
+                <div class="absolute w-[580px] h-[580px] rounded-full border border-white/15 pointer-events-none"></div>
+                <!-- Orbit 2: 40-59% Energy (Mid-Low Ring: 400px) -->
+                <div class="absolute w-[400px] h-[400px] rounded-full border border-white/15 pointer-events-none border-dashed animate-[spin_80s_linear_reverse_infinite]"></div>
+                <!-- Orbit 1: 0-39% Energy (Inner Core Ring: 240px) -->
+                <div class="absolute w-[240px] h-[240px] rounded-full border border-white/15 pointer-events-none"></div>
 
                 <!-- Target Area Injection Node Segment Container -->
                 <div id="nodes-container" class="absolute w-full h-full flex items-center justify-center"></div>
@@ -114,7 +444,7 @@
                         <textarea id="taskContent" placeholder="Brief description of the objective..." rows="2" class="w-full bg-white/5 border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40 resize-none"></textarea>
                     </div>
 
-                    <!-- NEW: Connected Orbit Dynamic Selector -->
+                    <!-- Connected Orbit Dynamic Selector -->
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-1">Connected Orbit</label>
                         <select id="taskConnected" class="w-full bg-[#111] border border-white/10 text-white rounded px-3 py-1.5 text-xs focus:outline-none focus:border-white/40 font-mono">
@@ -191,77 +521,43 @@
     </div>
 
     <script>
-        // --- System Data Engine Setup (Updated with varied energies to demonstrate 4 concentric orbits) ---
-        const timelineData = [
-            {
-                id: 1,
-                title: "Planning",
-                date: "Jan 2026",
-                content: "Project planning and requirements gathering phase.",
-                category: "Planning",
-                icon: "calendar",
-                relatedIds: [2],
-                status: "completed",
-                energy: 100 // Outer Giant Orbit (Ring 4)
-            },
-            {
-                id: 2,
-                title: "Design",
-                date: "Feb 2026",
-                content: "UI/UX design and system architecture.",
-                category: "Design",
-                icon: "file-text",
-                relatedIds: [1, 3],
-                status: "active",
-                energy: 85 // Outer Giant Orbit (Ring 4)
-            },
-            {
-                id: 3,
-                title: "Development",
-                date: "Mar 2026",
-                content: "Core features implementation and testing.",
-                category: "Development",
-                icon: "code",
-                relatedIds: [2, 4],
-                status: "active",
-                energy: 70 // Mid-High Orbit (Ring 3)
-            },
-            {
-                id: 4,
-                title: "Testing",
-                date: "Apr 2026",
-                content: "User testing and bug fixes.",
-                category: "Testing",
-                icon: "user",
-                relatedIds: [3, 5],
-                status: "paused",
-                energy: 50 // Mid-Low Orbit (Ring 2)
-            },
-            {
-                id: 5,
-                title: "Release",
-                date: "May 2026",
-                content: "Final deployment and release.",
-                category: "Release",
-                icon: "clock",
-                relatedIds: [4],
-                status: "canceled",
-                energy: 25 // Inner Core Orbit (Ring 1)
+        // --- User Session Authentication & Database Storage Engine ---
+        const activeUserId = localStorage.getItem('activeOrbitalUser') || 'GUEST';
+        document.getElementById('displayUserId').innerText = activeUserId;
+        
+        const storageKey = `orbital_tasks_${activeUserId}`;
+        
+        // Load user-specific tasks from memory. If brand new user, initialize completely empty array []
+        let timelineData = [];
+        const savedData = localStorage.getItem(storageKey);
+        if (savedData) {
+            try {
+                timelineData = JSON.parse(savedData);
+            } catch (e) {
+                timelineData = [];
             }
-        ];
+        }
+
+        function saveToLocalMemory() {
+            if (activeUserId !== 'GUEST') {
+                localStorage.setItem(storageKey, JSON.stringify(timelineData));
+            }
+        }
 
         // --- Application Architecture State Properties ---
         let activeNodeId = null;
         let autoRotate = true;
         let rotationAngle = 0;
+        let rotationSpeed = 0.3;      // Default speed corresponding to switch 2
+        let rotationMode = 'auto';    // 'auto', 'off', or 'scroll'
         let selectedIconName = "calendar";
 
-        // --- NEW: Calculate Orbit Radius Dynamically based on Energy Level ---
+        // --- UPGRADED: Dynamically calculate larger radii matching the new 760px orbital rig ---
         function getOrbitRadius(energy) {
-            if (energy >= 80) return 280; // Ring 4: Giant Orbit (560px diameter)
-            if (energy >= 60) return 210; // Ring 3: Mid-High Orbit (420px diameter)
-            if (energy >= 40) return 150; // Ring 2: Mid-Low Orbit (300px diameter)
-            return 95;                    // Ring 1: Inner Core Orbit (190px diameter)
+            if (energy >= 80) return 380; // Ring 4: Giant Orbit (760px diameter)
+            if (energy >= 60) return 290; // Ring 3: Mid-High Orbit (580px diameter)
+            if (energy >= 40) return 200; // Ring 2: Mid-Low Orbit (400px diameter)
+            return 120;                   // Ring 1: Inner Core Orbit (240px diameter)
         }
 
         // Elements
@@ -271,13 +567,54 @@
         const centerAddBtn = document.getElementById('centerAddBtn');
         const addModal = document.getElementById('addModal');
 
+        // --- Rotation Control Rig Controller Function ---
+        function setRotationSpeed(speed, mode) {
+            rotationSpeed = speed;
+            rotationMode = mode;
+            const statusText = document.getElementById('rotaryStatusText');
+
+            if (mode === 'off') {
+                autoRotate = false;
+                statusText.innerText = 'PAUSED / OFF';
+                statusText.className = 'text-red-400 font-extrabold';
+            } else if (mode === 'scroll') {
+                autoRotate = false;
+                statusText.innerText = 'MANUAL SCROLL';
+                statusText.className = 'text-teal-400 font-extrabold';
+            } else {
+                autoRotate = true;
+                let speedLabel = "2";
+                if (speed === 0.15) speedLabel = "1 (SLOW)";
+                if (speed === 0.3)  speedLabel = "2 (NORM)";
+                if (speed === 0.6)  speedLabel = "3 (FAST)";
+                if (speed === 1.0)  speedLabel = "4 (RAPID)";
+                if (speed === 1.5)  speedLabel = "5 (MAX)";
+                statusText.innerText = `SPEED ${speedLabel}`;
+                statusText.className = 'text-purple-400 font-extrabold';
+            }
+        }
+
         // --- Render Engine Pipeline Functions ---
         function renderTimeline() {
             nodesContainer.innerHTML = '';
             
+            // Real-Time Orbital Telemetry Summary Sync Engine
+            let activeCount = 0, pausedCount = 0, completedCount = 0, canceledCount = 0;
+            timelineData.forEach(item => {
+                if (item.status === 'active') activeCount++;
+                else if (item.status === 'paused') pausedCount++;
+                else if (item.status === 'completed') completedCount++;
+                else if (item.status === 'canceled') canceledCount++;
+            });
+            document.getElementById('countActive').innerText = activeCount;
+            document.getElementById('countPaused').innerText = pausedCount;
+            document.getElementById('countCompleted').innerText = completedCount;
+            document.getElementById('countCanceled').innerText = canceledCount;
+            document.getElementById('countTotal').innerText = timelineData.length;
+
             const totalNodes = timelineData.length;
             if (totalNodes === 0) {
-                nodesContainer.innerHTML = '<div class="text-white/40 font-mono text-xs uppercase tracking-widest z-10 pointer-events-none">No orbital tasks remaining. Click center + to launch new task.</div>';
+                nodesContainer.innerHTML = '<div class="text-white/50 font-mono text-sm uppercase tracking-widest z-10 pointer-events-none font-bold">No orbital tasks remaining. Click center + to launch new task.</div>';
                 return;
             }
 
@@ -307,115 +644,115 @@
                 nodeWrapper.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 
                 // Status Dynamic Styling Logic
-                let statusClasses = "bg-white text-black border-white shadow-lg shadow-white/30";
-                let statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-white text-black border-white">COMPLETED</span>`;
+                let statusClasses = "bg-white text-black border-white shadow-xl shadow-white/40";
+                let statusBadge = `<span class="px-2 py-0.5 text-xs tracking-wider font-extrabold rounded border bg-white text-black border-white">COMPLETED</span>`;
 
                 if (item.status === 'active') {
-                    statusClasses = "bg-blue-600 text-white border-blue-300 shadow-lg shadow-blue-500/50 animate-pulse";
-                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-blue-500/20 text-blue-300 border-blue-400">⚡ ACTIVE WORK</span>`;
+                    statusClasses = "bg-blue-600 text-white border-blue-300 shadow-xl shadow-blue-500/60 animate-pulse";
+                    statusBadge = `<span class="px-2 py-0.5 text-xs tracking-wider font-extrabold rounded border bg-blue-500/20 text-blue-300 border-blue-400">⚡ ACTIVE WORK</span>`;
                 } else if (item.status === 'paused') {
-                    statusClasses = "bg-amber-500/30 text-amber-300 border-amber-400 shadow-lg shadow-amber-500/20";
-                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-amber-500/20 text-amber-300 border-amber-400">⏸ PAUSED</span>`;
+                    statusClasses = "bg-amber-500/30 text-amber-300 border-amber-400 shadow-xl shadow-amber-500/30";
+                    statusBadge = `<span class="px-2 py-0.5 text-xs tracking-wider font-extrabold rounded border bg-amber-500/20 text-amber-300 border-amber-400">⏸ PAUSED</span>`;
                 } else if (item.status === 'canceled') {
                     statusClasses = "bg-red-950/60 text-red-400 border-red-500/50 opacity-60";
-                    statusBadge = `<span class="px-2 py-0.5 text-[10px] tracking-wider font-bold rounded border bg-red-500/20 text-red-400 border-red-500">✖ CANCELED</span>`;
+                    statusBadge = `<span class="px-2 py-0.5 text-xs tracking-wider font-extrabold rounded border bg-red-500/20 text-red-400 border-red-500">✖ CANCELED</span>`;
                 }
                 
                 if (isExpanded) {
                     statusClasses += " scale-150 ring-4 ring-white/40";
                 } else if (isRelated) {
-                    statusClasses = "bg-white/80 text-black border-white animate-pulse shadow-lg shadow-white/30";
+                    statusClasses = "bg-white/80 text-black border-white animate-pulse shadow-xl shadow-white/40";
                 }
 
-                // Node Structure Template String Injection Blueprint
+                // UPGRADED: Node Structure Template String (Scaled UP buttons from 40px to 48px, icons to 20px, text to text-sm)
                 nodeWrapper.innerHTML = `
                     <!-- Energy Aura Radial Pulse Indicator Layer -->
                     <div class="absolute rounded-full -inset-1 ${isRelated ? 'pulse-active' : ''}" 
                          style="background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%); 
-                                width: ${item.energy * 0.5 + 40}px; height: ${item.energy * 0.5 + 40}px; 
-                                transform: translate(calc(-50% + 20px), calc(-50% + 20px)); pointer-events:none;">
+                                width: ${item.energy * 0.5 + 50}px; height: ${item.energy * 0.5 + 50}px; 
+                                transform: translate(calc(-50% + 24px), calc(-50% + 24px)); pointer-events:none;">
                     </div>
 
-                    <!-- Main Interactive Icon Token Button -->
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${statusClasses}">
-                        <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+                    <!-- UPGRADED: Main Interactive Icon Token Button (w-12 h-12) -->
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${statusClasses}">
+                        <i data-lucide="${item.icon}" class="w-5 h-5"></i>
                     </div>
 
-                    <!-- Primary Absolute Subtitle Node Label -->
-                    <div class="absolute top-12 whitespace-nowrap text-xs font-semibold tracking-wider transition-all duration-300 ${isExpanded ? 'text-white scale-125 font-bold' : item.status === 'canceled' ? 'text-red-400/60 line-through' : 'text-white/80'}">
+                    <!-- UPGRADED: Primary Absolute Subtitle Node Label (text-sm font-bold) -->
+                    <div class="absolute top-14 whitespace-nowrap text-sm font-bold tracking-wider transition-all duration-300 ${isExpanded ? 'text-white scale-125 font-extrabold' : item.status === 'canceled' ? 'text-red-400/60 line-through' : 'text-white/90'}">
                         ${item.title}
                     </div>
 
-                    <!-- Expanded Card Layout Portal View overlay panel -->
+                    <!-- UPGRADED: Expanded Card Layout Portal View overlay panel (w-80 for larger view) -->
                     ${isExpanded ? `
-                    <div class="absolute top-20 w-72 bg-black/95 backdrop-blur-xl border border-white/40 shadow-2xl shadow-white/10 p-4 rounded-xl z-[300]" onclick="event.stopPropagation()">
+                    <div class="absolute top-24 w-80 bg-black/95 backdrop-blur-xl border border-white/40 shadow-2xl shadow-white/15 p-5 rounded-2xl z-[300]" onclick="event.stopPropagation()">
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-px h-3 bg-white/60"></div>
                         
-                        <div class="flex justify-between items-center mb-2">
+                        <div class="flex justify-between items-center mb-3">
                             ${statusBadge}
-                            <span class="text-xs font-mono text-white/50">${item.date}</span>
+                            <span class="text-xs font-mono text-white/60 font-bold">${item.date}</span>
                         </div>
                         
                         <!-- Header with Title and Delete Action Option -->
-                        <div class="flex justify-between items-start my-2 pb-2 border-b border-white/10">
-                            <h3 class="text-sm font-bold text-white">${item.title}</h3>
-                            <button type="button" onclick="deleteTask(${item.id}, event)" class="flex items-center gap-1 text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-all font-bold tracking-wider" title="Delete Task">
-                                <i data-lucide="trash-2" class="w-3 h-3"></i> DELETE
+                        <div class="flex justify-between items-start my-2.5 pb-2.5 border-b border-white/15">
+                            <h3 class="text-base font-extrabold text-white">${item.title}</h3>
+                            <button type="button" onclick="deleteTask(${item.id}, event)" class="flex items-center gap-1 text-[11px] bg-red-500/20 text-red-400 border border-red-500/40 px-2.5 py-1 rounded-lg hover:bg-red-500 hover:text-white transition-all font-extrabold tracking-wider" title="Delete Task">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> DELETE
                             </button>
                         </div>
 
-                        <p class="text-xs text-white/80 leading-relaxed">${item.content}</p>
+                        <p class="text-sm text-white/80 leading-relaxed font-sans">${item.content}</p>
 
                         <!-- Energy Tracking Module Visualizer -->
-                        <div class="mt-3 pt-2 border-t border-white/10">
-                            <div class="flex justify-between items-center text-[11px] mb-1 text-white/70">
-                                <span class="flex items-center gap-1">
-                                    <i data-lucide="zap" class="w-3 h-3 text-purple-400"></i> Orbit Ring Level
+                        <div class="mt-3.5 pt-2.5 border-t border-white/15">
+                            <div class="flex justify-between items-center text-xs mb-1.5 text-white/80 font-bold">
+                                <span class="flex items-center gap-1.5">
+                                    <i data-lucide="zap" class="w-3.5 h-3.5 text-purple-400"></i> Orbit Ring Level
                                 </span>
-                                <span class="font-mono font-bold text-white">${item.energy}%</span>
+                                <span class="font-mono font-extrabold text-white">${item.energy}%</span>
                             </div>
-                            <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                                 <div class="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-teal-400" style="width: ${item.energy}%"></div>
                             </div>
                         </div>
 
-                        <!-- NEW: Work Status Switcher Option -->
-                        <div class="mt-3 pt-2 border-t border-white/10">
-                            <span class="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Set Work Status:</span>
-                            <div class="grid grid-cols-3 gap-1">
-                                <button type="button" onclick="changeStatus(${item.id}, 'active', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'active' ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-500/30' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                        <!-- Work Status Switcher Option -->
+                        <div class="mt-3.5 pt-2.5 border-t border-white/15">
+                            <span class="block text-xs text-white/60 uppercase tracking-wider mb-1.5 font-bold">Set Work Status:</span>
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <button type="button" onclick="changeStatus(${item.id}, 'active', event)" class="py-1.5 px-1 text-xs font-extrabold rounded-lg border transition-all ${item.status === 'active' ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-500/30' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
                                     ⚡ ACTIVE
                                 </button>
-                                <button type="button" onclick="changeStatus(${item.id}, 'paused', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'paused' ? 'bg-amber-500 text-black border-amber-300 font-extrabold' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                                <button type="button" onclick="changeStatus(${item.id}, 'paused', event)" class="py-1.5 px-1 text-xs font-extrabold rounded-lg border transition-all ${item.status === 'paused' ? 'bg-amber-500 text-black border-amber-300' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
                                     ⏸ PAUSE
                                 </button>
-                                <button type="button" onclick="changeStatus(${item.id}, 'canceled', event)" class="py-1 px-1 text-[10px] font-bold rounded border transition-all ${item.status === 'canceled' ? 'bg-red-600 text-white border-red-400' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
+                                <button type="button" onclick="changeStatus(${item.id}, 'canceled', event)" class="py-1.5 px-1 text-xs font-extrabold rounded-lg border transition-all ${item.status === 'canceled' ? 'bg-red-600 text-white border-red-400' : 'bg-white/5 text-white/70 border-white/10 hover:bg-white/15 hover:text-white'}">
                                     ✖ CANCEL
                                 </button>
                             </div>
                         </div>
 
-                        <!-- NEW: Dedicated Task Complete Button -->
-                        <div class="mt-2 pt-2 border-t border-white/10">
-                            <button type="button" onclick="markComplete(${item.id}, event)" class="w-full py-2 px-3 bg-gradient-to-r from-teal-400 to-emerald-500 text-black font-extrabold text-xs tracking-wider rounded shadow-lg shadow-teal-500/20 hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                        <!-- Dedicated Task Complete Button -->
+                        <div class="mt-2.5 pt-2.5 border-t border-white/15">
+                            <button type="button" onclick="markComplete(${item.id}, event)" class="w-full py-2.5 px-3 bg-gradient-to-r from-teal-400 to-emerald-500 text-black font-extrabold text-xs tracking-wider uppercase rounded-xl shadow-lg shadow-teal-500/20 hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2">
                                 <i data-lucide="check-circle" class="w-4 h-4"></i> TASK COMPLETE
                             </button>
                         </div>
 
                         <!-- Interconnected Nodes Hyperlink Cluster Engine -->
                         ${item.relatedIds.length > 0 ? `
-                        <div class="mt-3 pt-2 border-t border-white/10">
-                            <div class="flex items-center mb-1 gap-1 text-[10px] uppercase tracking-wider font-medium text-white/50">
-                                <i data-lucide="link" class="w-2.5 h-2.5"></i> Connected Nodes
+                        <div class="mt-3.5 pt-2.5 border-t border-white/15">
+                            <div class="flex items-center mb-1.5 gap-1.5 text-xs uppercase tracking-wider font-extrabold text-white/60">
+                                <i data-lucide="link" class="w-3 h-3"></i> Connected Nodes
                             </div>
-                            <div class="flex flex-wrap gap-1">
+                            <div class="flex flex-wrap gap-1.5">
                                 ${item.relatedIds.map(relId => {
                                     const relItem = timelineData.find(i => i.id === relId);
                                     if (!relItem) return '';
                                     return `
-                                        <button type="button" class="flex items-center gap-1 h-6 px-2 text-[11px] border border-white/20 bg-transparent hover:bg-white/10 text-white/80 hover:text-white transition-all rounded-none" onclick="jumpToNode(${relId})">
+                                        <button type="button" class="flex items-center gap-1 h-7 px-2.5 text-xs border border-white/20 bg-transparent hover:bg-white/10 text-white/90 hover:text-white transition-all rounded-lg font-medium" onclick="jumpToNode(${relId})">
                                             ${relItem.title}
-                                            <i data-lucide="arrow-right" class="w-2.5 h-2.5 opacity-60"></i>
+                                            <i data-lucide="arrow-right" class="w-3 h-3 opacity-60"></i>
                                         </button>
                                     `;
                                 }).join('')}
@@ -443,7 +780,7 @@
         function toggleItem(id, index) {
             if (activeNodeId === id) {
                 activeNodeId = null;
-                autoRotate = true;
+                if (rotationMode === 'auto') autoRotate = true;
             } else {
                 activeNodeId = id;
                 autoRotate = false;
@@ -461,22 +798,24 @@
             }
         }
 
-        // --- NEW: Change Work Status (Active, Pause, Cancel) ---
+        // --- Change Work Status (Active, Pause, Cancel) ---
         function changeStatus(id, newStatus, event) {
             if (event) event.stopPropagation();
             const item = timelineData.find(i => i.id === id);
             if (item) {
                 item.status = newStatus;
+                saveToLocalMemory();
                 renderTimeline();
             }
         }
 
-        // --- NEW: Mark Task Complete Button Handler ---
+        // --- Mark Task Complete Button Handler ---
         function markComplete(id, event) {
             if (event) event.stopPropagation();
             const item = timelineData.find(i => i.id === id);
             if (item) {
                 item.status = 'completed';
+                saveToLocalMemory();
                 renderTimeline();
             }
         }
@@ -493,8 +832,9 @@
             });
             if (activeNodeId === id) {
                 activeNodeId = null;
-                autoRotate = true;
+                if (rotationMode === 'auto') autoRotate = true;
             }
+            saveToLocalMemory();
             renderTimeline();
         }
 
@@ -507,7 +847,7 @@
             document.getElementById('taskContent').value = '';
             document.getElementById('taskEnergy').value = '90';
             
-            // NEW: Dynamically populate Connected Orbit dropdown selector
+            // Dynamically populate Connected Orbit dropdown selector
             const connectedSelect = document.getElementById('taskConnected');
             connectedSelect.innerHTML = '<option value="" class="bg-black text-white/50">-- Independent Orbit (None) --</option>';
             timelineData.forEach(item => {
@@ -527,7 +867,7 @@
 
         function closeModal() {
             addModal.classList.add('hidden');
-            if (!activeNodeId) {
+            if (!activeNodeId && rotationMode === 'auto') {
                 autoRotate = true;
             }
         }
@@ -551,7 +891,7 @@
 
             const newId = timelineData.length > 0 ? Math.max(...timelineData.map(i => i.id)) + 1 : 1;
 
-            // NEW: Link nodes based on the dropdown selection
+            // Link nodes based on the dropdown selection
             const relatedIds = [];
             if (connectedIdVal !== "") {
                 const targetId = parseInt(connectedIdVal);
@@ -574,6 +914,7 @@
                 energy: Math.min(100, Math.max(0, energy))
             });
 
+            saveToLocalMemory();
             closeModal();
             renderTimeline();
         }
@@ -591,7 +932,7 @@
         container.addEventListener('click', (e) => {
             if (e.target === container || e.target === orbitRig) {
                 activeNodeId = null;
-                autoRotate = true;
+                if (rotationMode === 'auto') autoRotate = true;
                 renderTimeline();
             }
         });
@@ -599,17 +940,20 @@
         // --- Mouse Wheel Scroll Dynamic Rotation Interceptor Engine ---
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
-            autoRotate = false;
-            const scrollSensitivity = 0.05;
-            rotationAngle = (rotationAngle + e.deltaY * scrollSensitivity) % 360;
-            if (rotationAngle < 0) rotationAngle += 360;
-            renderTimeline();
+            // If in SCROLL mode or anytime user scrolls, we rotate by wheel delta
+            if (rotationMode === 'scroll' || rotationMode === 'auto') {
+                autoRotate = false; // Temporarily pause auto rotate when scrolling
+                const scrollSensitivity = 0.08;
+                rotationAngle = (rotationAngle + e.deltaY * scrollSensitivity) % 360;
+                if (rotationAngle < 0) rotationAngle += 360;
+                renderTimeline();
+            }
         }, { passive: false });
 
         // --- Core Orbital Tick Rotation Engine ---
         setInterval(() => {
-            if (autoRotate) {
-                rotationAngle = (rotationAngle + 0.3) % 360;
+            if (autoRotate && rotationMode === 'auto') {
+                rotationAngle = (rotationAngle + rotationSpeed) % 360;
                 renderTimeline();
             }
         }, 50);
